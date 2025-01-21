@@ -1,0 +1,149 @@
+-- Create the GUI elements
+local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local TitleBar = Instance.new("Frame")
+local TitleLabel = Instance.new("TextLabel")
+local CloseButton = Instance.new("TextButton")
+local CopyButton = Instance.new("TextButton")
+
+-- Buttons for position and size adjustment
+local UpButton = Instance.new("TextButton")
+local DownButton = Instance.new("TextButton")
+local LeftButton = Instance.new("TextButton")
+local RightButton = Instance.new("TextButton")
+local BiggerButton = Instance.new("TextButton")
+local SmallerButton = Instance.new("TextButton")
+
+-- Parent the GUI to the player's PlayerGui
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+-- Set up the Frame
+Frame.Parent = ScreenGui
+Frame.BackgroundColor3 = Color3.new(0, 0, 0)
+Frame.Size = UDim2.new(0, 320, 0, 200) -- Reduced height for less space below
+Frame.Position = UDim2.new(0.5, -160, 0.5, -100)
+
+-- Set up the TitleBar
+TitleBar.Parent = Frame
+TitleBar.BackgroundColor3 = Color3.new(0.5, 0.5, 0.5)
+TitleBar.Size = UDim2.new(1, 0, 0, 30)
+TitleBar.Position = UDim2.new(0, 0, 0, 0)
+
+-- Set up the TitleLabel
+TitleLabel.Parent = TitleBar
+TitleLabel.Text = "Jump Button Size Changer V1"
+TitleLabel.Size = UDim2.new(1, -30, 1, 0)
+TitleLabel.Position = UDim2.new(0, 0, 0, 0)
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.TextColor3 = Color3.new(1, 1, 1)
+TitleLabel.TextScaled = true
+
+-- Set up the CloseButton
+CloseButton.Parent = TitleBar
+CloseButton.BackgroundColor3 = Color3.new(1, 0, 0)
+CloseButton.Size = UDim2.new(0, 30, 1, 0)
+CloseButton.Position = UDim2.new(1, -30, 0, 0)
+CloseButton.Text = "X"
+CloseButton.TextColor3 = Color3.new(1, 1, 1)
+CloseButton.TextScaled = true
+
+-- Set up the CopyButton
+CopyButton.Parent = Frame
+CopyButton.BackgroundColor3 = Color3.new(0.8, 0.8, 0.8)
+CopyButton.Size = UDim2.new(1, -10, 0, 40)
+CopyButton.Position = UDim2.new(0, 5, 0, 35)
+CopyButton.Text = "Save Changes | Place Script In Autoexecute"
+
+-- Set up the movement buttons
+UpButton.Parent = Frame
+UpButton.Size = UDim2.new(0.25, -5, 0, 40)
+UpButton.Position = UDim2.new(0, 5, 0, 80)
+UpButton.Text = "Up"
+UpButton.BackgroundColor3 = Color3.new(0.8, 0.8, 0.8)
+
+DownButton.Parent = Frame
+DownButton.Size = UDim2.new(0.25, -5, 0, 40)
+DownButton.Position = UDim2.new(0.25, 0, 0, 80)
+DownButton.Text = "Down"
+DownButton.BackgroundColor3 = Color3.new(0.8, 0.8, 0.8)
+
+LeftButton.Parent = Frame
+LeftButton.Size = UDim2.new(0.25, -5, 0, 40)
+LeftButton.Position = UDim2.new(0.5, 0, 0, 80)
+LeftButton.Text = "Left"
+LeftButton.BackgroundColor3 = Color3.new(0.8, 0.8, 0.8)
+
+RightButton.Parent = Frame
+RightButton.Size = UDim2.new(0.25, -5, 0, 40)
+RightButton.Position = UDim2.new(0.75, 0, 0, 80)
+RightButton.Text = "Right"
+RightButton.BackgroundColor3 = Color3.new(0.8, 0.8, 0.8)
+
+-- Set up the size buttons
+BiggerButton.Parent = Frame
+BiggerButton.Size = UDim2.new(0.5, -10, 0, 40)
+BiggerButton.Position = UDim2.new(0, 5, 0, 130)
+BiggerButton.Text = "Bigger"
+BiggerButton.BackgroundColor3 = Color3.new(0.8, 0.8, 0.8)
+
+SmallerButton.Parent = Frame
+SmallerButton.Size = UDim2.new(0.5, -10, 0, 40)
+SmallerButton.Position = UDim2.new(0.5, 5, 0, 130)
+SmallerButton.Text = "Smaller"
+SmallerButton.BackgroundColor3 = Color3.new(0.8, 0.8, 0.8)
+
+-- Variables to track changes
+local xChange, yChange, sizeChange = 0, 0, 0
+
+local function updateJumpButton(xDelta, yDelta, sizeDelta)
+    local jumpButton = game:GetService("Players").LocalPlayer.PlayerGui.TouchGui.TouchControlFrame.JumpButton
+    xChange = xChange + xDelta
+    yChange = yChange + yDelta
+    sizeChange = sizeChange + sizeDelta
+    jumpButton.Position = UDim2.new(jumpButton.Position.X.Scale, jumpButton.Position.X.Offset + xDelta, jumpButton.Position.Y.Scale, jumpButton.Position.Y.Offset + yDelta)
+    jumpButton.Size = UDim2.new(jumpButton.Size.X.Scale, jumpButton.Size.X.Offset + sizeDelta, jumpButton.Size.Y.Scale, jumpButton.Size.Y.Offset + sizeDelta)
+end
+
+-- Button click functions
+UpButton.MouseButton1Click:Connect(function()
+    updateJumpButton(0, -5, 0)
+end)
+
+DownButton.MouseButton1Click:Connect(function()
+    updateJumpButton(0, 5, 0)
+end)
+
+LeftButton.MouseButton1Click:Connect(function()
+    updateJumpButton(-5, 0, 0)
+end)
+
+RightButton.MouseButton1Click:Connect(function()
+    updateJumpButton(5, 0, 0)
+end)
+
+BiggerButton.MouseButton1Click:Connect(function()
+    updateJumpButton(0, 0, 5)
+end)
+
+SmallerButton.MouseButton1Click:Connect(function()
+    updateJumpButton(0, 0, -5)
+end)
+
+-- Function to copy script to clipboard
+local function copyToClipboard()
+    local script = string.format([[
+local jumpButton = game:GetService("Players").LocalPlayer.PlayerGui.TouchGui.TouchControlFrame.JumpButton
+jumpButton.Position = UDim2.new(jumpButton.Position.X.Scale, jumpButton.Position.X.Offset + %d, jumpButton.Position.Y.Scale, jumpButton.Position.Y.Offset + %d)
+jumpButton.Size = UDim2.new(jumpButton.Size.X.Scale, jumpButton.Size.X.Offset + %d, jumpButton.Size.Y.Scale, jumpButton.Size.Y.Offset + %d)
+]], xChange, yChange, sizeChange, sizeChange)
+    
+    setclipboard(script)
+end
+
+CopyButton.MouseButton1Click:Connect(copyToClipboard)
+
+-- Function to close the GUI
+CloseButton.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+end)
